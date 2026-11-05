@@ -1,0 +1,17 @@
+# The dsh-workbench bundle patch layer.
+#
+# Installed as a profile layer by:
+#   dsh plugin --profile <name> add @samanhappy/dsh-workbench
+#
+# One dual-face row: the HOST half (index.js, bundled from src/host/index.ts,
+# with an inline schemastery Config) registers the /forge, /dms, /sls,
+# /pingcode, /home and /notifications routes that drive the local CLIs
+# (`git`, `glab`, `gh`, `aliyun`, `npx skills`, `python3`); the CLIENT half is
+# declared in the package manifest (`dsh.client` + `dsh.client.inject` +
+# `exports["./client"]`, bundled from src/client/* to lib/client.js by
+# `npm run build`), which the host client-modules service scans into
+# window.__DSH_BOOT__ at runtime. No dynamic Cordis runner is involved, so no
+# approval and no steering.
+- insert:
+    - id: dsh-workbench-samanhappy
+      name: '@samanhappy/dsh-workbench'

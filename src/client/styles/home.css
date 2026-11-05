@@ -1,0 +1,115 @@
+/* 首页（需要我关注）——统计卡 + 活跃会话卡片 + 通知摘要。
+   复用既有卡片/列表/通知的变量与尺寸；wb-home-* 前缀避免与其他页冲突。
+   区块左右留白统一 24px：首页区块直接顶在 .wb-top 页签栏下方，24px 与页签栏
+   的横向留白一致，内容左缘才能和上方「首页」页签连成一条竖线。 */
+/* 首页撑满工作区高度：三行网格——统计卡按内容，活跃会话两栏与 GitHub 通知两条
+   1fr 轨道平分剩余高度。视窗越高两块一起变高（列表在各自卡片内滚动，看到更多
+   行）；矮视窗两块各自保底到内容高度、整页滚动。用网格而不是 flex 分配：flex
+   的 basis 不含卡片内边距 / 边框，同一 grow 下带内边距的那块会高出一截。
+   区块最小高度 = 内容区最小高度 + 卡片内边距 32 + 头部 34 + 边框 2，两块同一
+   口径，矮视窗里卡片不会被压到内容之下。底部 20px 与区块间距一致。 */
+.wb-home{--wb-home-content-height:228px;--wb-home-block-min:calc(var(--wb-home-content-height) + 68px);display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(var(--wb-home-block-min),1fr) minmax(var(--wb-home-block-min),1fr);gap:20px;overflow:auto;padding-bottom:20px}
+.wb-home-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:0 24px}
+.wb-home-card{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border:1px solid var(--dsw-alias-border-l2,rgba(128,128,128,.18));border-radius:8px;background:var(--dsw-alias-bg-layer-1,#1f1f20);text-align:left;font:inherit;color:inherit}
+button.wb-home-card{cursor:pointer}
+button.wb-home-card:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+button.wb-home-card:focus-visible{outline:2px solid var(--wb-accent);outline-offset:3px}
+.wb-home-card-value{font-size:26px;line-height:32px;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-home-card-label{display:flex;align-items:center;gap:6px;font-size:12px;line-height:18px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-home-card-label svg{flex:none}
+/* 区块卡：每个汇总区块 = 独立圆角卡片（标题 + 计数徽标 + 副标题 + 行卡片），
+   设计稿样式；左右 24px 页边距改由 margin 承担，内边距归卡片自己。 */
+.wb-home-sec{min-width:0;margin:0 24px;padding:16px 20px;border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.12));border-radius:16px;background:var(--dsw-alias-bg-layer-1,#1f1f20)}
+/* 通知区（首页最后一块）纵向排列：头部与错误条固定，通知列表吃满卡片剩余高度、
+   超出在卡片内滚动。 */
+.wb-home>.wb-home-sec{display:flex;flex-direction:column}
+.wb-home>.wb-home-sec>.glab-error{flex:none}
+.wb-home-sec-head{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.wb-home-sec-topline{display:flex;align-items:center;gap:8px;min-width:0}
+.wb-home-sec-title{font-size:15px;line-height:22px;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-home-sec-badge{flex:none;min-width:20px;padding:0 7px;border-radius:999px;background:var(--wb-accent-bg);color:var(--wb-accent);font-size:12px;line-height:20px;font-weight:500;text-align:center}
+/* 每栏显示范围过滤（全部 / 剔除后台）：紧凑分段按钮，放在区块头右侧。 */
+.wb-home-filter{display:inline-flex;flex:none;gap:2px;padding:2px;border-radius:7px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46))}
+.wb-home-filter-btn{border:0;background:transparent;padding:0 8px;height:20px;border-radius:5px;font:inherit;font-size:12px;line-height:20px;color:var(--dsw-alias-label-tertiary,#8a8f98);cursor:pointer;white-space:nowrap}
+.wb-home-filter-btn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-home-filter-btn:focus-visible{outline:2px solid var(--wb-accent);outline-offset:1px}
+.wb-home-filter-btn[aria-pressed='true']{background:var(--dsw-alias-bg-layer-1,rgb(35,35,36));color:var(--dsw-alias-label-primary,#e2e8f0);box-shadow:0 0 0 .5px var(--dsw-alias-border-l2,rgba(255,255,255,.12))}
+.wb-home-more{display:inline-flex;align-items:center;gap:2px;flex:none;border:0;background:transparent;padding:0;font:inherit;font-size:13px;line-height:20px;color:var(--wb-accent);cursor:pointer}
+.wb-home-more:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-home-more:focus-visible{outline:2px solid var(--wb-accent);outline-offset:3px;border-radius:3px}
+/* 会话行卡片：每行独立圆角边框卡，单行布局——左栏状态槽位最前 + 标题 · 工作区，
+   行尾时间/状态胶囊 + chevron；右栏（已读完成归档）无状态槽位，标题直接从卡片
+   内边距起排。列表吃满卡片剩余高度（卡片高度由两栏平分视窗决定），行数超出时
+   在卡片内滚动，不撑破卡片。 */
+.wb-home-slist{display:flex;flex:1 1 0;flex-direction:column;gap:var(--wb-home-row-gap);box-sizing:border-box;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.wb-home-srow{flex:none;box-sizing:border-box;display:flex;gap:8px;align-items:center;min-height:var(--wb-home-row-h);padding:0 10px 0 12px;border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.12));border-radius:10px;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+.wb-home-srow:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+/* 等你动手的会话（待交互 / 待处理）用状态色描边，与侧栏 warning 胶囊呼应。 */
+.wb-home-srow[data-state='warning']{border-color:color-mix(in srgb,var(--dsw-alias-state-warn-primary,#d97706) 35%,transparent)}
+/* 后台常驻会话（host 按 agent preset 判定）：虚线描边 + 标题后的「后台」标记，
+   与人工发起的会话区分；两栏的「剔除后台」过滤据同一标记剔除。 */
+.wb-home-srow[data-background='1']{border-style:dashed}
+.wb-home-sbg{--wb-spill-c:var(--dsw-alias-label-tertiary,#8a8f98);flex:none;height:16px;padding:0 5px;font-size:10px;line-height:16px;font-weight:500}
+/* 通知区 / 空态在卡片内吃满剩余高度（见上面的两块主区规则）：加载 / 空态 / 列表
+   切换时卡片不跳动；出现错误条时通知区让位、列表在更矮的空间里滚动，不撑破卡片
+   （卡片高度下限已由两块主区规则统一兜住）。会话两栏的空态同样吃满内容区。 */
+.wb-home-notes,.wb-home>.wb-home-sec>.wb-empty{box-sizing:border-box;flex:1 1 0;min-height:0}
+.wb-home .wb-empty{justify-content:center;padding:0}
+.wb-home-sessions .wb-home-sec .wb-empty{box-sizing:border-box;flex:1 1 0;min-height:0;margin:0;padding:20px 0}
+.wb-home-sfoot{flex:none;display:flex;justify-content:center;padding:2px 0 4px;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+/* 状态槽位固定 14px（只在左栏）：左栏每行都有状态点，标题左缘整列对齐；
+   右栏全是已读归档、不渲染槽位。 */
+.wb-home-sicon{flex:none;display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px}
+/* 会话状态点：复用宿主 StateDot 的几何/动画/配色（侧边栏会话行同款）。
+   实心态 10px 槽位（::after 画 60% 实心核），运行态 14px svg——track 环常显
+   25% + 弧线呼吸，两动画同周期 1.5s；动画起点由 ref 钉到文档零点。 */
+.wb-home-sdot{display:inline-block;flex:none;position:relative;width:10px;height:10px}
+.wb-home-sdot::after{content:'';position:absolute;inset:20%;border-radius:50%;background:currentColor}
+.wb-home-sdot[data-state='warning']{color:var(--dsw-alias-state-warn-primary,#d97706)}
+.wb-home-sdot[data-state='done']{color:var(--dsw-alias-state-success-primary,#16a34a)}
+.wb-home-sdot[data-state='idle']{color:var(--dsw-alias-state-idle-primary,#8a8f98)}
+.wb-home-sspin{flex:none;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-home-sspin-motion{transform-origin:center;animation:wb-state-dot-spin 1.5s linear infinite}
+.wb-home-sspin-track,.wb-home-sspin-arc{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.wb-home-sspin-track{opacity:.25}
+.wb-home-sspin-arc{stroke-dasharray:12 150;animation:wb-state-dot-dash 1.5s ease-in-out infinite}
+@keyframes wb-state-dot-spin{to{transform:rotate(360deg)}}
+@keyframes wb-state-dot-dash{0%{stroke-dasharray:12 150;stroke-dashoffset:0}50%{stroke-dasharray:24 150;stroke-dashoffset:-6}100%{stroke-dasharray:12 150;stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.wb-home-sspin-motion,.wb-home-sspin-arc{animation:none}.wb-home-sspin-arc{stroke-dasharray:18 150;stroke-dashoffset:-3}}
+/* 单行布局：标题超长省略（可收缩），分隔点 · 工作区跟在其后（工作区也可收缩），
+   行尾时间 + chevron 不换行——工作区名取宿主注册表，比完整路径短得多。 */
+.wb-home-sbody{display:flex;align-items:center;gap:2px;flex:1;min-width:0}
+.wb-home-stitle{flex:0 1 auto;min-width:0;padding:0;border:0;background:transparent;font:inherit;font-size:13px;line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0);text-align:left;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 左栏未读完成加粗（绿点 + 字重即「结果还没看过」）；右栏全是已读归档，
+   统一退到常规字重与次级色。 */
+.wb-home-srow-unread .wb-home-stitle{font-weight:600}
+.wb-home-srow-read .wb-home-stitle{font-weight:400;color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-home-ssep{flex:none;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+/* 空间不够时工作区名先收缩（shrink 权重远大于标题），但至少留 3em 可辨认；
+   完整标题与路径见行 tooltip。 */
+.wb-home-sws{flex:0 1000 auto;min-width:3em;max-width:45%;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-home-send{display:flex;align-items:center;gap:4px;flex:none;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);white-space:nowrap}
+.wb-home-send>svg{opacity:.45;transition:opacity .15s ease}
+.wb-home-srow:hover .wb-home-send>svg{opacity:1}
+.wb-home-notes{display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.wb-home-note-row{display:flex;align-items:center;gap:8px;flex:none;border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.12));border-radius:12px;padding-right:6px}
+.wb-home-note-row:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-workbench .wb-home-note-row>.wb-act{background:transparent}
+.wb-home-note{flex:1;min-width:0;display:block;padding:10px 14px;text-decoration:none}
+/* 未读不加整框强调色描边：通知区只列未读（all=false），描边等于给每行重复
+   同一个信号，还比会话行卡片重一截（两处边框深浅不一致）；「有几条未读」
+   已由区块徽标表达，行内只留标题字重差异（与活跃会话标题的 500 同档）。 */
+.wb-home-note-title{font-size:13px;line-height:20px;color:var(--dsw-alias-label-primary,#e2e8f0);overflow-wrap:anywhere}
+.wb-home-note-unread .wb-home-note-title{font-weight:500}
+.wb-home-note-meta{font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);margin-top:2px;overflow-wrap:anywhere}
+
+/* 两栏平分整行高度：单行轨道 minmax(0,1fr) 吃满所在网格行，卡片纵向排列、
+   列表 / 空态吃满剩余空间并在卡内滚动；不按内容定高，两栏边框因此始终等高。
+   窄容器（<700px）折成一列：两卡上下排、各自保底高度，整页滚动。 */
+.wb-home-sessions{--wb-home-row-h:36px;--wb-home-row-gap:6px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr);align-items:stretch;gap:20px;margin:0 24px;min-width:0}
+.wb-home-sessions>.wb-home-sec{display:flex;flex-direction:column;margin:0;min-height:0}
+@container (max-width:700px){
+  .wb-home{grid-template-rows:auto auto minmax(var(--wb-home-block-min),1fr)}
+  .wb-home-sessions{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;align-items:start}
+  .wb-home-sessions>.wb-home-sec{min-height:var(--wb-home-block-min)}
+}

@@ -1,0 +1,31 @@
+# Dependabot configuration.
+#
+# Why npm version updates are not automated: the committed bundles (`index.js`,
+# `lib/client.js`) are regenerated from source by `build.mjs`, and several
+# devDependencies are inlined into them (`@deepseek-ai/schemastery` and its
+# `@deepseek-ai/cosmokit`) or shape the output (`esbuild`, `diff`). A dependency
+# bump therefore changes the artifacts, which Dependabot cannot rebuild, so every
+# such PR would fail the "build artifacts" check. Upgrade devDependencies by
+# hand: `npm install <pkg>@<version>` → `npm run build` → `npm test` → commit the
+# bundles. Security updates (repository "Dependabot security updates") still open
+# PRs; rebuild the artifacts on those branches before merging.
+#
+# DSH contract packages: the `@deepseek-ai/*` packages that `npm run typecheck`
+# resolves are installed on demand by `npm run typecheck:setup` (pinned versions,
+# `--no-save`). They are NOT devDependencies, so Dependabot cannot and should
+# not manage them — bump the pin in package.json by hand when a new public DSH
+# contract release lands.
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: 'chore(ci)'

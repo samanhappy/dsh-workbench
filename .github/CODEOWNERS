@@ -1,0 +1,13 @@
+# Default code owners for the repository.
+#
+# GitHub reads CODEOWNERS from `.github/`, the repository root, or `docs/`, in
+# that order. Everything is owned by the maintainer today. Add narrower rules
+# above the catch-all when a second maintainer or a subsystem owner appears,
+# e.g.:
+#
+#   /src/host/   @your-handle
+#   /src/client/ @your-handle
+#
+# Ownership only takes effect once "Require review from Code Owners" is enabled
+# in the branch protection rule for `main`.
+* @samanhappy

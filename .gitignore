@@ -1,0 +1,25 @@
+node_modules/
+*.tgz
+.DS_Store
+.npm-cache/
+.visual-tmp/
+
+# Local environment files — never commit secrets. Committed examples are fine.
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Local DSH state and tool caches
+.dsh/
+coverage/
+dist/
+
+# Temporary client bundle written and removed by build.mjs
+lib/_client.bundle.js
+
+# Logs
+*.log
+
+# Editors
+.idea/
