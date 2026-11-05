@@ -1,0 +1,133 @@
+name: Bug report
+description: Report something in dsh-workbench that does not work as documented.
+title: '[bug] '
+labels: ['bug', 'needs-triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug.
+
+        Before you continue:
+
+        - **Never paste credentials, tokens, cookies, internal hostnames, customer data or unreviewed logs.** Redact secrets and internal URLs before pasting anything.
+        - Check [docs/limitations.md](https://github.com/samanhappy/dsh-workbench/blob/main/docs/limitations.md) first — some behaviour is a documented limitation, not a bug.
+        - For security issues, **do not open a public issue**. Report privately per [SECURITY.md](https://github.com/samanhappy/dsh-workbench/blob/main/SECURITY.md).
+        - The workbench drives CLIs already installed on your machine (`glab`, `gh`, `aliyun`, `npx skills`, `python3`). Many failures are CLI login or PATH problems — include the CLI versions below.
+
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+      description: The DeepSeek Harness build the workbench runs inside (Help → About, or `dsh --version`).
+      placeholder: 0.1.6-alpha.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS (Apple silicon)
+        - macOS (Intel)
+        - Linux (x86_64)
+        - Linux (arm64)
+        - Windows (WSL)
+        - Other (explain in the description)
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      description: Output of `node --version` (used by the build and by skills management).
+      placeholder: v24.14.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: cli-versions
+    attributes:
+      label: CLI versions
+      description: Output of the version commands for the CLIs involved. Write "not installed" for the others.
+      render: shell
+      placeholder: |
+        glab version 1.86.0
+        gh version 2.86.0
+        aliyun version 3.2.1
+        npx skills --version
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: integration
+    attributes:
+      label: Affected area(s)
+      description: Select every area the bug touches.
+      options:
+        - label: Workbench shell, sidebar or Settings page
+        - label: Repo page — GitLab MRs
+        - label: Repo page — GitHub PRs
+        - label: Repo page — Issues
+        - label: Local Git (commit / push / pull)
+        - label: Review or Issue-handling sessions
+        - label: Aliyun DMS approvals
+        - label: Aliyun SLS logs
+        - label: PingCode work items
+        - label: Skills management
+        - label: Home dashboard or notifications
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact steps, in order. Include the workspace/repository setup and what you clicked.
+      placeholder: |
+        1. Open the workbench with the web profile
+        2. Go to ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What happened instead? A screenshot or short recording helps for UI bugs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs (redacted)
+      description: Browser console output, host log lines or the failing response. Redact tokens, cookies, internal hostnames and personal or customer data.
+      render: shell
+
+  - type: input
+    id: npm-test
+    attributes:
+      label: Result of `npm test` at the commit you are running
+      description: Paste the summary lines if you can build from source; otherwise write "not run".
+      placeholder: '# pass 1234 / # fail 0'
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I searched existing issues and did not find this bug.
+          required: true
+        - label: I removed all secrets, credentials, internal hostnames and customer data from this report.
+          required: true

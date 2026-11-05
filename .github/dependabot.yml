@@ -1,0 +1,39 @@
+# Dependabot configuration.
+#
+# Note on DSH contract packages: the `@deepseek-ai/*` packages that `npm run
+# typecheck` resolves are installed on demand by `npm run typecheck:setup`
+# (pinned versions, `--no-save`). They are NOT devDependencies, so Dependabot
+# cannot and should not manage them — bump the pin in package.json by hand when
+# a new public DSH contract release lands. What Dependabot does manage here is
+# the real devDependency set and the workflow actions.
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: 'chore(deps)'
+    groups:
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: 'chore(ci)'

@@ -1,0 +1,19 @@
+{
+  // Build-time tsconfig for esbuild (build.mjs). Deliberately has NO `paths`:
+  // the typecheck tsconfig.json maps @deepseek-ai/* to a machine-specific
+  // absolute DSH install path, and esbuild would bake that resolved location
+  // into the bundle, making the committed artifacts unreproducible on machines
+  // without that install. Bundling here resolves the lockfile-pinned
+  // node_modules copies instead. Typecheck keeps its own tsconfig (with
+  // `paths`) and is unaffected. Keep this file free of environment-specific
+  // paths so builds are byte-reproducible everywhere.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}

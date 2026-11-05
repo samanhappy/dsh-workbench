@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability (private)
+    url: https://github.com/samanhappy/dsh-workbench/security/advisories/new
+    about: Never open a public issue for a security problem. Use GitHub private advisories; see SECURITY.md for scope.
+  - name: Installation, prerequisites and troubleshooting
+    url: https://github.com/samanhappy/dsh-workbench/blob/main/docs/installation.md
+    about: CLI login, PATH and DSH installation problems are usually answered here first.
+  - name: Known limitations
+    url: https://github.com/samanhappy/dsh-workbench/blob/main/docs/limitations.md
+    about: Check whether the behaviour you are about to report is a documented limitation.
+  - name: Discussions are disabled
+    url: https://github.com/samanhappy/dsh-workbench/issues
+    about: This repository keeps Discussions off. Use issues for bugs and feature requests, and private advisories for security reports.

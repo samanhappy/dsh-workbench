@@ -1,0 +1,25 @@
+.wb-inset{border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));border-radius:8px;padding:10px;margin:0 10px}
+
+/* 侧栏「工作台」行尾固定区：配置页勾选的功能快捷入口常显在前，其后是会话
+   状态胶囊。两者都常显，hover 不再替换或隐藏其中任何一个 —— 行的主体仍是
+   「首页」入口。宿主行按钮由 PanelIcon 打 data-wb-row 标记，固定区以它为
+   包含块贴行尾定位。入口较多且状态胶囊较多时，标题会被按固定区宽度截断；
+   可在配置页关掉部分入口，或拉宽侧栏。 */
+button[data-wb-row]{position:relative}
+.wb-row-tail{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;gap:4px;pointer-events:auto}
+.wb-row-jump{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;cursor:pointer;color:var(--dsw-alias-label-tertiary,rgba(128,128,128,.6))}
+.wb-row-jump:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1));color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-row-jump-dot{position:absolute;top:1px;right:1px;width:5px;height:5px;border-radius:50%;background:#fc6d26;border:1px solid var(--dsw-alias-bg-layer-1,#232324)}
+/* 会话状态胶囊：柔和实底（状态色 14%）+ 状态色文字，无描边。侧栏工作台行的
+   状态计数、首页行尾「待审批」与「最近完成」未读计数共用；放在 chrome 层是因为
+   侧栏不在 .wb-workbench 作用域内。颜色取宿主状态语义变量（与 StateDot 同源）。 */
+.wb-spill{--wb-spill-c:var(--dsw-alias-label-secondary,#6b7280);display:inline-flex;align-items:center;gap:4px;flex:none;height:18px;padding:0 6px;border-radius:9px;font-size:11px;line-height:18px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--wb-spill-c);background:color-mix(in srgb,var(--wb-spill-c) 14%,transparent)}
+.wb-spill[data-state='warning']{--wb-spill-c:var(--dsw-alias-state-warn-primary,#d97706)}
+.wb-spill[data-state='done']{--wb-spill-c:var(--dsw-alias-state-success-primary,#16a34a)}
+.wb-spill .wb-home-sspin{color:inherit}
+.wb-spill .wb-home-sdot{width:8px;height:8px;color:inherit}
+.wb-spill .wb-home-sdot::after{inset:12%}
+.wb-row-session-badges{display:inline-flex;gap:4px;pointer-events:auto}
+.wb-row-session-badge{padding:0 6px 0 5px}
+/* 行尾宽度超过剩余空间时截断标题，避免常显入口盖住「工作台」文字。 */
+button[data-wb-row][data-wb-tail]>span:last-child{max-width:max(0px,calc(100% - var(--wb-tail-w,0px) - 26px))}

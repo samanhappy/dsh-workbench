@@ -1,0 +1,96 @@
+{
+  "name": "@samanhappy/dsh-workbench",
+  "version": "0.9.0",
+  "description": "Workbench for DeepSeek Harness (DSH) Web: local Git, GitLab MR / GitHub PR & Issues, Aliyun DMS approvals, Aliyun SLS logs, PingCode work items and skills management — driven by the CLIs you already use.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./lib/client.js",
+    "./src/*": "./src/*",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "lib/client.js",
+    "src/host",
+    "src/client",
+    "src/shared",
+    "cordis.patch.yml",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "README.md",
+    "README.zh.md",
+    "docs",
+    "assets"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "pretest": "node build.mjs",
+    "test": "node --test test/cli-discovery.mjs test/forge-auth.mjs test/toast-position.mjs test/git-integration.mjs test/git-host-modules.test.mjs test/git-routes.test.mjs test/git-ai.test.mjs test/build-repro.mjs test/self-update.mjs test/notifications.mjs test/auto-review.mjs test/auto-review-scope.mjs test/auto-review-client.mjs test/review-filter.mjs test/state-lists.mjs test/current-session.mjs test/prompt-config.mjs test/review-model.mjs test/feature-toggles.mjs test/review-session.mjs test/diff-view.mjs test/forge-notes.mjs test/forge-issues.mjs test/sls-query.mjs test/sls-detail.mjs test/dms-order-sql.mjs test/dms-order-css.mjs test/dms-filter.mjs test/dms-my-orders.mjs test/dms-entry-refresh.mjs test/sls-form-css.mjs test/sidebar-jump.mjs test/pingcode-host.mjs test/pingcode-client.mjs test/skills-host.mjs test/skills-client.mjs test/skills-interaction.mjs test/note-composer.mjs test/confirm-dialog.mjs test/repo-navigation.mjs test/forge-workspaces.mjs test/home-host.mjs test/home-client.mjs test/shortcuts.mjs test/no-leaks.mjs",
+    "smoke": "node build.mjs && node smoke.mjs",
+    "sim": "node build.mjs && node sim-panel.mjs",
+    "typecheck:setup": "npm install --no-save --package-lock=false --legacy-peer-deps @deepseek-ai/cordis@4.0.2 @deepseek-ai/dsh-client-ui-renderer@0.1.6-alpha.2 @deepseek-ai/dsh-client-ui-session@0.1.6-alpha.2 @deepseek-ai/dsh-client-ui-workspace@0.1.6-alpha.2 @deepseek-ai/dsh-client-ui-conversation@0.1.6-alpha.2 @deepseek-ai/dsh-client-ui-sidebar@0.1.6-alpha.2 @deepseek-ai/dsh-client-ui-layout@0.1.6-alpha.2 @deepseek-ai/dsh-api-session-controller@0.1.6-alpha.2 @deepseek-ai/dsh-api-workspace-controller@0.1.6-alpha.2"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=22.15.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@deepseek-ai/schemastery": "3.18.2",
+    "@types/node": "^22.10.0",
+    "@types/react": "~18.3.0",
+    "diff": "^9.0.0",
+    "esbuild": "^0.28.0",
+    "react": "^18.2.0",
+    "typescript": "~5.6.0"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "dsh",
+    "workbench",
+    "git",
+    "gitlab",
+    "github",
+    "merge-request",
+    "pull-request",
+    "code-review",
+    "dms",
+    "sls",
+    "pingcode"
+  ],
+  "author": {
+    "name": "samanhappy",
+    "url": "https://github.com/samanhappy"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samanhappy/dsh-workbench.git"
+  },
+  "homepage": "https://github.com/samanhappy/dsh-workbench#readme",
+  "bugs": {
+    "url": "https://github.com/samanhappy/dsh-workbench/issues"
+  }
+}

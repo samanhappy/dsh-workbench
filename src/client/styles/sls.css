@@ -1,0 +1,163 @@
+/* dsh-workbench — SLS 日志 page styles（按高保真设计图优化后的布局）。
+ *
+ * 结构：
+ *   1. 紧凑三行查询表单（字段栅格 / 时间范围 / 倒序开关 / 单行查询框 / 快捷区间）
+ *   2. 折叠态摘要条、列表/瀑布切换、加载更多
+ *   3. 紧凑日志列表（单行头：箭头/时间/摘要/服务标签/状态/耗时/IP/trace/操作）
+ *   4. 展开体三页签：详情（左右分栏 KV）/ SQL（行号+分色）/ JSON（缩进树）
+ *   5. 瀑布视图
+ * 延续面板既有 token（--wb-* / --dsw-alias-*），浅色简洁风格；超长 SQL/JSON
+ * 靠外层 .glab-body 滚动，内部不再嵌套滚动层。 */
+
+/* ── 1. 查询表单 ─────────────────────────────────────────────────────────── */
+.wb-sls-form{display:flex;flex-direction:column;gap:8px;margin:0 10px 8px;padding:10px 12px;border:0.5px solid var(--dsw-alias-border-l2,rgba(0,0,0,.08));border-radius:10px;background:var(--dsw-alias-bg-layer-1,#fff)}
+.wb-sls-frow{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;min-width:0}
+.wb-sls-field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.wb-sls-flabel{font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8f98);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* border-box：glab-input 全局默认 content-box，width:100% + padding + 边框
+   会让输入框比字段盒宽出 ~18px（吃掉列间隙，固定宽度字段处直接压到相邻
+   组件上——返回行数框压倒序开关）。这里显式贴合字段宽度。 */
+.wb-sls-finput{box-sizing:border-box;font-size:12px;line-height:20px;padding:3px 8px;border-radius:6px;min-width:0;width:100%}
+/* 环境下拉（替代 Project/Logstore 手填）。Chrome 的 select 不理会
+   line-height，闭合高度按字体+padding 自算（~21px），比输入框（27px）矮
+   ——显式 height 对齐整行控件。 */
+.wb-sls-envsel{cursor:pointer;height:27px}
+.wb-sls-envsel:disabled{opacity:.5;cursor:default}
+.wb-sls-field-grow{flex:1 1 170px}
+.wb-sls-field-range{flex:2 1 320px}
+.wb-sls-range{display:flex;align-items:center;gap:6px;min-width:0}
+.wb-sls-range .wb-sls-finput{flex:1;min-width:0}
+.wb-sls-range-sep{color:var(--dsw-alias-label-tertiary,#8a8f98);flex:none}
+.wb-sls-field-line{flex:0 0 104px}
+.wb-sls-field-rev{flex:none}
+/* 倒序：小号开关（设计图样式），checkbox 仍承载语义；高度对齐输入框（27px）让开关与输入框文字居中一致 */
+.wb-sls-switch{position:relative;display:inline-flex;align-items:center;height:27px;cursor:pointer}
+.wb-sls-switch input{position:absolute;opacity:0;width:0;height:0}
+.wb-sls-slider{width:32px;height:16px;border-radius:999px;background:var(--dsw-alias-bg-layer-3,rgba(0,0,0,.12));border:0.5px solid var(--dsw-alias-border-l2,rgba(0,0,0,.08));position:relative;transition:background .15s ease,border-color .15s ease}
+.wb-sls-slider::after{content:'';position:absolute;top:1px;left:1px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .15s ease}
+.wb-sls-switch input:checked + .wb-sls-slider{background:var(--wb-accent);border-color:var(--wb-accent)}
+.wb-sls-switch input:checked + .wb-sls-slider::after{transform:translateX(16px)}
+.wb-sls-switch input:focus-visible + .wb-sls-slider{box-shadow:0 0 0 2.5px var(--wb-accent-bg)}
+/* 查询语句：单行高度起步、可纵向拉伸；按钮同行右侧 */
+.wb-sls-qinput{flex:1;min-width:240px;min-height:34px;max-height:170px;font-size:12px;line-height:20px;padding:6px 9px;border-radius:7px;resize:vertical;font-family:var(--ds-font-family-code,ui-monospace,monospace)}
+.wb-sls-qbtns{display:flex;gap:6px;flex:none}
+/* 快捷区间 chips（第三行） */
+.wb-sls-presets{align-items:center}
+.wb-sls-preset{border:0;background:transparent;color:var(--dsw-alias-label-secondary,#94a3b8);font-size:11px;font-family:inherit;line-height:20px;padding:2px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.wb-sls-preset:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-preset:disabled{opacity:.5;cursor:default}
+.wb-sls-preset-active{color:var(--wb-accent);background:var(--wb-accent-bg)}
+
+/* ── 2. 视图切换 / 加载更多 ─────────────────────────────────────────────── */
+.wb-sls-viewtog{display:flex;gap:2px;margin-left:auto;flex:none}
+.wb-sls-vtog{border:0;background:transparent;color:var(--dsw-alias-label-secondary,#94a3b8);font-size:11px;font-family:inherit;line-height:18px;padding:1px 8px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.wb-sls-vtog:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-vtog-active{color:var(--wb-accent);background:var(--wb-accent-bg)}
+.wb-sls-more{display:flex;align-items:center;justify-content:center;gap:10px;padding:4px 0}
+.wb-sls-more-hint{font-size:11px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-sls-summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:2px 12px}
+.wb-sls-summary .wb-meta{white-space:normal;word-break:break-all}
+
+/* ── 3. 紧凑日志列表 ─────────────────────────────────────────────────────── */
+/* 收起态：仅轻量分隔线；展开态：浅橙描边卡片强调当前选中 */
+.wb-sls-entry{margin:0 10px;min-width:0;border-bottom:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06))}
+.wb-sls-entry:last-child{border-bottom:0}
+.wb-sls-entry-open{margin:6px 10px;border:0.5px solid rgba(252,109,38,.45);border-radius:10px;background:var(--dsw-alias-bg-layer-1,#fff);overflow:hidden}
+.wb-sls-entry-head{display:flex;align-items:center;gap:8px;min-width:0;cursor:pointer;padding:6px 10px}
+.wb-sls-entry-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+
+
+.wb-sls-time{font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:12px;line-height:18px;color:var(--wb-accent);flex:none;white-space:nowrap}
+.wb-sls-title{flex:1 1 140px;min-width:100px;font-size:var(--dsh-content-font-size-secondary,13px);line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 服务名：浅蓝标签；异常状态沿用语义色（红/橙），正常状态不显示 */
+.wb-sls-svctag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;line-height:18px;padding:0 8px;border-radius:999px;background:var(--wb-info-bg);color:var(--wb-info)}
+.wb-sls-tag-err{background:var(--wb-danger-bg);color:var(--wb-danger);font-weight:600}
+.wb-sls-tag-warn{background:var(--wb-warn-bg);color:var(--wb-warn)}
+/* 固定宽度数据列：每行无条件渲染（缺数据留空占位），各行纵向对齐；
+   空间不足时按列宽等比收缩（ellipsis），不会把右侧列推错位 */
+.wb-sls-hcell{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;line-height:18px}
+.wb-sls-hsvc{flex:0 1 150px}
+.wb-sls-hstatus{flex:0 1 64px}
+.wb-sls-hdur{flex:0 1 78px;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:12px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-sls-hip{flex:0 1 116px;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-sls-htrace{flex:0 1 190px}
+/* traceID 下钻链接：点击即以 traceID: "…" 重新查询 */
+.wb-sls-trace{max-width:100%;overflow:hidden;text-overflow:ellipsis;border:0;background:transparent;padding:0;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:18px;color:var(--wb-info);cursor:pointer;white-space:nowrap;text-align:left}
+.wb-sls-trace:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-actions{margin-left:auto;display:flex;gap:2px;align-items:center;flex:none}
+.wb-sls-act{border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8a8f98);font-size:11px;font-family:inherit;line-height:18px;padding:1px 6px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.wb-sls-act:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-act-done{color:var(--wb-ok)}
+/* 窄窗口适配：依次让出 IP / 耗时 / 服务名+状态+trace（详情页签里仍可见） */
+@media (max-width:900px){.wb-sls-hip{display:none}}
+@media (max-width:760px){.wb-sls-hdur{display:none}.wb-sls-field-range{flex-basis:100%}}
+@media (max-width:640px){.wb-sls-htrace,.wb-sls-hsvc,.wb-sls-hstatus{display:none}}
+
+/* ── 4a. 展开体：页签 ────────────────────────────────────────────────────── */
+.wb-sls-body{display:flex;flex-direction:column;gap:8px;padding:2px 10px 10px;min-width:0}
+.wb-sls-tabs{display:flex;gap:2px;border-bottom:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06))}
+.wb-sls-tab{border:0;background:transparent;font-family:inherit;font-size:12px;line-height:26px;padding:0 10px;color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-0.5px;white-space:nowrap}
+.wb-sls-tab:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-tab-active{color:var(--wb-accent);border-bottom-color:var(--wb-accent);font-weight:600}
+
+/* ── 4b. 详情页签：左右分栏 KV ───────────────────────────────────────────── */
+.wb-sls-detail{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;min-width:0}
+.wb-sls-dcol{flex:1 1 280px;min-width:250px;border:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06));border-radius:8px;background:var(--dsw-alias-bg-layer-2,#fafafa);padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+/* 基本信息列窄一点（KV 短标签即可），把宽度让给右侧 SQL / 扩展字段 */
+.wb-sls-detail>.wb-sls-dcol:first-child{flex:1 1 300px;min-width:240px;max-width:400px}
+.wb-sls-dhead{font-size:12px;line-height:22px;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-sls-kv{display:flex;align-items:baseline;gap:8px;font-size:12px;line-height:20px;min-width:0}
+.wb-sls-kv-k{flex:none;width:78px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-sls-kv-v{flex:1;min-width:0;color:var(--dsw-alias-label-primary,#e2e8f0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-sls-kvcopy{flex:none;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8a8f98);cursor:pointer;font-size:11px;line-height:20px;padding:0 2px}
+.wb-sls-kvcopy:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-extras{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0 18px;min-width:0}
+.wb-sls-extras .wb-sls-kv-k{width:auto;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+/* 扩展字段折叠区开关（默认只展示重要键，其余收在这里）；按钮贴列首 */
+.wb-sls-extras-toggle{display:inline-flex;align-items:center;gap:4px;align-self:flex-start;margin-top:4px;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8a8f98);font-size:11px;font-family:inherit;line-height:20px;padding:2px 6px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.wb-sls-extras-toggle:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+/* 日志正文（详情下方整行）：异常消息/HTML 等主要载荷用主文字色，不降级成次要灰 */
+.wb-sls-content{margin:0;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:19px;color:var(--dsw-alias-label-primary,#e2e8f0);background:var(--dsw-alias-bg-layer-2,#fafafa);border:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06));border-radius:8px;padding:6px 8px;white-space:pre-wrap;word-break:break-all}
+
+/* ── 4c. SQL 语句块（详情右栏 / SQL 页签共用）────────────────────────────── */
+.wb-sls-sqlwrap{border:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06));border-radius:8px;background:var(--dsw-alias-bg-layer-2,#fafafa);overflow:hidden;min-width:0}
+.wb-sls-sqlhead{display:flex;align-items:center;gap:8px;padding:4px 8px 2px}
+.wb-sls-sql{margin:0;padding:4px 8px 8px;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:19px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-sls-sqlline{display:flex;white-space:pre-wrap;word-break:break-all}
+.wb-sls-sqlcode{flex:1 1 0;min-width:0}
+.wb-sls-sqlno{flex:none;width:24px;text-align:right;margin-right:12px;color:var(--dsw-alias-label-tertiary,#8a8f98);user-select:none}
+.wb-sls-sqlkw{color:var(--wb-info);font-weight:600}
+.wb-sls-sqlstr{color:var(--wb-ok)}
+.wb-sls-sqlnum{color:var(--wb-violet)}
+.wb-sls-sqlcom{color:var(--dsw-alias-label-tertiary,#8a8f98);font-style:italic}
+.wb-sls-sqlfn{color:var(--wb-accent)}
+
+/* ── 4d. JSON 页签：逐行缩进树（key 蓝 / 字符串亮 / 数字紫 / 括号弱化）───── */
+.wb-sls-json{font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:19px;color:var(--dsw-alias-label-secondary,#94a3b8);background:var(--dsw-alias-bg-layer-2,#fafafa);border:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06));border-radius:8px;padding:6px 8px;margin:0}
+.wb-sls-jline{white-space:pre-wrap;word-break:break-all}
+.wb-sls-jkey{color:var(--wb-info)}
+.wb-sls-jstr{color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-sls-jnum{color:var(--wb-violet)}
+.wb-sls-jpunc{color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-sls-jcap{color:var(--dsw-alias-label-tertiary,#8a8f98);font-style:italic}
+
+/* ── 5. 瀑布视图：trace 分组 + span 时间条（client 蓝 / Error 红 / 其余 accent）─ */
+.wb-sls-wf{display:flex;flex-direction:column;gap:8px}
+.wb-sls-wf-trace{display:flex;flex-direction:column;gap:3px;padding:7px 10px;border-radius:8px;min-width:0}
+.wb-sls-wf-trace:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-sls-wf-head{display:flex;align-items:center;gap:8px;min-width:0}
+.wb-sls-wf-tid{font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:12px;line-height:18px;color:var(--wb-info);flex:none;white-space:nowrap}
+.wb-sls-wf-meta{font-size:11px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb-sls-wf-row{display:flex;align-items:center;gap:8px;min-width:0}
+.wb-sls-wf-label{flex:none;width:200px;max-width:38%;font-size:12px;line-height:18px;color:var(--dsw-alias-label-primary,#e2e8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb-sls-wf-track{flex:1;position:relative;height:12px;min-width:60px;background:var(--dsw-alias-bg-layer-3,rgba(0,0,0,.06));border-radius:4px;overflow:hidden}
+.wb-sls-wf-bar{position:absolute;top:1px;bottom:1px;min-width:2px;border-radius:3px;background:var(--wb-accent)}
+.wb-sls-wf-bar-client{background:var(--wb-info)}
+.wb-sls-wf-bar-err{background:var(--wb-danger)}
+.wb-sls-wf-dur{flex:none;min-width:56px;text-align:right;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:18px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+
+/* 同时查询共用外层滚动容器，分区随详情内容自然增高。 */
+.wb-sls-combined>section{flex:none;min-width:0}
+.wb-sls-combined>section>.glab-body{flex:none;overflow:visible}
+
+.wb-sls-detail>.wb-sls-content{flex:0 0 100%;width:100%;min-width:0;box-sizing:border-box}

@@ -1,0 +1,74 @@
+/* dsh-workbench — PingCode 研发管理工作项 page styles.
+ *
+ * 复用既有小节：topbar 的 wb-bar/wb-title/wb-meta、sls.css 的紧凑表单栅格
+ * （wb-sls-form/frow/field/flabel/finput/envsel）与结果摘要行 wb-sls-summary、
+ * list 的 wb-item 行骨架、detail 的 wb-detail-wrap/wb-detail-title/wb-crumbs
+ * 排版与 wb-sls-sqlhead/wb-sls-dhead 卡片标题。这里只放本页新增的部分：
+ * 工具栏状态快筛 pills、状态点色 chip、优先级着色、详情描述/评论卡。
+ * 延续面板既有 token（--wb-* / --dsw-alias-*），浅色简洁风格。 */
+
+/* ── 工具栏：状态快筛 pills（与仓库页页签计数同一交互语言；点一下按该分类
+ *    本地过滤，再点一下取消；计数与筛选共用同一份已加载列表）── */
+/* flex:none：pills 不可压缩（子项 nowrap），窄面板时挤压右侧 meta 收省略号，
+ * 而不是让 pills 内容溢出画到相邻元素上。 */
+.wb-pc-stats{display:inline-flex;align-items:center;gap:2px;flex:none}
+.wb-pc-stat{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--dsw-alias-label-secondary,#94a3b8);font-size:12px;font-family:inherit;line-height:20px;padding:2px 9px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:color .15s ease,background .15s ease}
+.wb-pc-stat:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-pc-stat-active,.wb-pc-stat-active:hover{color:var(--wb-accent);background:var(--wb-accent-bg)}
+.wb-pc-stat-dot{width:7px;height:7px;border-radius:50%;flex:none}
+
+/* ── 列表行：状态点色 chip（有 state.color 时按 PingCode 工作流色着色）── */
+.wb-pc-state{display:inline-flex;align-items:center;gap:5px;font-size:11px;line-height:18px;padding:0 8px;border-radius:999px;white-space:nowrap;border:0.5px solid transparent}
+.wb-pc-dot{width:6px;height:6px;border-radius:50%;flex:none;background:currentColor}
+.wb-pc-state-pending{color:var(--wb-warn);background:var(--wb-warn-bg)}
+.wb-pc-state-progress{color:var(--wb-info);background:var(--wb-info-bg)}
+.wb-pc-state-completed{color:var(--wb-ok);background:var(--wb-ok-bg)}
+.wb-pc-state-suspended{color:var(--wb-violet);background:var(--wb-violet-bg)}
+/* 优先级：文字而非 chip，按严重度着色（紧急/最高 → 红，其余含「高」→ 橙） */
+.wb-pc-prio{font-size:11px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);white-space:nowrap}
+.wb-pc-prio-warn{color:var(--wb-warn)}
+.wb-pc-prio-danger{color:var(--wb-danger);font-weight:600}
+/* 行 meta 不沿用 glab-mr-branches 的 mono（那是分支名用的）：项目名/负责人是中文 */
+.wb-pc-meta{font-size:12px;line-height:18px;color:var(--dsw-alias-label-secondary,#94a3b8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── 详情：描述与评论卡（标题复用 wb-sls-sqlhead/dhead）── */
+.wb-pc-card{border:0.5px solid var(--dsw-alias-border-l1,rgba(0,0,0,.06));border-radius:8px;background:var(--dsw-alias-bg-layer-1,#fff);padding-bottom:8px;min-width:0}
+.wb-pc-card>.wb-sls-sqlhead{padding:8px 12px 2px}
+.wb-pc-desc{padding:2px 12px 4px;font-size:13px;line-height:1.65;color:var(--dsw-alias-label-primary,#e2e8f0);white-space:pre-wrap;word-break:break-word}
+.wb-pc-desc-empty{color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-pc-open{display:inline-flex;align-items:center;gap:5px;color:var(--wb-info);font-size:12px;line-height:20px;text-decoration:none;white-space:nowrap}
+a.wb-pc-open:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+
+/* ── 富文本渲染（描述/评论是 HTML：host 白名单清洗后进 innerHTML）── */
+/* white-space 覆盖回 normal：HTML 正文由 <p>/<br> 管换行，源里标签间的换行
+ * 缩进不该再显示；.wb-pc-desc/.wb-pc-note-body 的 pre-wrap 只服务纯文本
+ * 回退路径（无 .wb-pc-rich 时不受影响）。 */
+.wb-pc-rich{white-space:normal;word-break:break-word}
+.wb-pc-rich p{margin:0 0 6px}
+.wb-pc-rich p:last-child{margin-bottom:0}
+.wb-pc-rich img{max-width:100%;height:auto;border-radius:4px}
+.wb-pc-rich a{color:var(--wb-info);text-decoration:none}
+.wb-pc-rich a:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-pc-rich ul,.wb-pc-rich ol{margin:0 0 6px;padding-left:22px}
+.wb-pc-rich blockquote{margin:0 0 6px;padding:2px 10px;border-left:3px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-pc-rich pre{margin:0 0 6px;padding:6px 8px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));border-radius:6px;overflow:auto}
+.wb-pc-rich code{font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:12px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));border-radius:4px;padding:0 4px}
+.wb-pc-rich pre code{display:block;white-space:pre;background:transparent;padding:0}
+.wb-pc-rich table{border-collapse:collapse;margin:0 0 6px}
+.wb-pc-rich th,.wb-pc-rich td{border:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));padding:2px 8px}
+.wb-pc-rich h1,.wb-pc-rich h2,.wb-pc-rich h3,.wb-pc-rich h4,.wb-pc-rich h5,.wb-pc-rich h6{margin:8px 0 4px;font-weight:600}
+.wb-pc-rich hr{border:0;border-top:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));margin:8px 0}
+
+/* ── 评论列表：头像 + 内容（回复缩进）── */
+.wb-pc-notes{display:flex;flex-direction:column;min-width:0}
+.wb-pc-note-list{display:flex;flex-direction:column;gap:8px;padding:6px 12px 2px}
+.wb-pc-note{display:flex;align-items:flex-start;gap:8px;min-width:0}
+.wb-pc-avatar{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;user-select:none}
+.wb-pc-note-main{flex:1;min-width:0}
+.wb-pc-note-head{display:flex;align-items:baseline;gap:8px;min-width:0}
+.wb-pc-note-author{font-size:12px;font-weight:500;color:var(--dsw-alias-label-primary,#1f2329);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wb-pc-note-time{font-size:11px;color:var(--dsw-alias-label-tertiary,#8a8f98);white-space:nowrap}
+.wb-pc-note-body{font-size:12px;line-height:19px;color:var(--dsw-alias-label-primary,#1f2329);white-space:pre-wrap;word-break:break-word;margin-top:1px}
+.wb-pc-note-reply{margin-left:30px}
+
+.wb-pc-state-label{color:var(--dsw-alias-label-primary,#1f2329)}

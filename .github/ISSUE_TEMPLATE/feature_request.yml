@@ -1,0 +1,73 @@
+name: Feature request
+description: Suggest an improvement or a new capability for dsh-workbench.
+title: '[feature] '
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggestions are welcome. Please keep the project's boundaries in mind:
+
+        - The workbench is a **client of the CLIs you already use**. It does not bundle, proxy or store credentials.
+        - New integrations must fit the same trust model: fixed whitelisted argv, no shell interpolation, same-origin routes, remote rich text sanitized before rendering.
+        - Requests about DSH itself (sessions, approvals, shortcuts, the host UI) belong to the DeepSeek Harness project instead.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do today, and what blocks you?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What should the workbench do? Describe the user-visible behaviour, not the implementation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing workarounds, CLI commands, or other tools you tried.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Workbench shell or Settings page
+        - Repo page (MR / PR / Issues)
+        - Local Git
+        - Review or Issue handling
+        - DMS
+        - SLS
+        - PingCode
+        - Skills management
+        - Home dashboard or notifications
+        - Documentation or developer experience
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+      description: The version you are running, so the request can be scoped to the APIs it can rely on.
+      placeholder: 0.1.6-alpha.2
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I searched existing issues for the same request.
+          required: true
+        - label: I removed secrets, internal hostnames and customer data from this request.
+          required: true

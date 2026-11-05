@@ -1,0 +1,117 @@
+.glab-detail{display:flex;flex-direction:column;gap:8px;padding:0 10px}.glab-detail-head{display:flex;flex-direction:column;gap:6px}.glab-detail-title{font-size:calc(14px + var(--dsh-content-font-delta,0px));line-height:calc(22px + var(--dsh-content-font-delta,0px));font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0);display:flex;align-items:center;gap:8px;flex-wrap:wrap}.glab-detail-desc{font-size:13px;line-height:20px;color:var(--dsw-alias-label-secondary,#94a3b8);white-space:pre-wrap;word-break:break-word}
+
+/* ── 详情页：面包屑 + 轻头部 + 收敛操作区（右栏已取消，审查状态并入 meta chips）。
+   间距走 8/12/16/24 体系。正文排版覆写 MarkdownText 消费的 --dsw-font-markdown-* 令牌。 */
+.wb-detail-wrap{padding:8px 16px 24px}
+.wb-detail-main{min-width:0;display:flex;flex-direction:column;gap:8px}
+.wb-detail-main>.glab-detail-head{margin-bottom:2px}
+.wb-tabpane{min-width:0}
+.wb-crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);min-width:0}
+.wb-crumb{white-space:nowrap;font-family:var(--ds-font-family-code,ui-monospace,monospace)}
+.wb-crumb-sep{opacity:.55}
+.wb-crumb-link{border:0;background:transparent;padding:0;font-family:inherit;font-size:12px;line-height:18px;color:var(--dsw-alias-label-secondary,#94a3b8);cursor:pointer;white-space:nowrap}
+a.wb-crumb-link{font-family:var(--ds-font-family-code,ui-monospace,monospace);text-decoration:none}
+.wb-crumb-link:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-crumb-here{font-family:var(--ds-font-family-code,ui-monospace,monospace);color:var(--dsw-alias-label-secondary,#94a3b8);white-space:nowrap}
+.wb-detail-refresh{display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8a8f98);width:22px;height:22px;border-radius:6px;cursor:pointer;padding:0}
+.wb-detail-refresh:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-detail-refresh:disabled{opacity:.45;cursor:default}
+/* 标题：nowrap 让编号与标题文字始终同处一行（旧版 flex-wrap:wrap 会让标题
+   整块掉到下一行，编号独占一行）；标题文字在自己的盒子内部折行。 */
+.wb-detail-title{display:flex;align-items:baseline;flex-wrap:nowrap;gap:10px;font-size:calc(20px + var(--dsh-content-font-delta,0px));line-height:1.4;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-title-iid{flex:none;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:calc(16px + var(--dsh-content-font-delta,0px));font-weight:600;color:var(--wb-accent);text-decoration:none;white-space:nowrap}
+a.wb-title-iid:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-title-text{min-width:0;overflow-wrap:anywhere}
+.wb-detail-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;line-height:22px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-title-chips{display:inline-flex;gap:4px;flex-wrap:wrap;align-items:center}
+.wb-detail-author{color:var(--dsw-alias-label-primary,#e2e8f0);font-weight:500}
+.wb-meta-dim{white-space:nowrap}
+/* 分支：作为一个 nowrap 单元跟在更新时间后面；长分支名内部省略，整组可随 meta 折到下一行。 */
+.wb-branches-inline{display:inline-flex;align-items:center;gap:6px;flex:none;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:12px;line-height:20px;color:var(--dsw-alias-label-tertiary,#8a8f98);max-width:100%}
+.wb-branch{display:inline-flex;align-items:center;gap:3px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));border:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));border-radius:6px;padding:1px 4px 1px 7px;color:var(--dsw-alias-label-secondary,#94a3b8);white-space:nowrap;max-width:200px}
+.wb-branch-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-branch-arrow{opacity:.6}
+.wb-copy{display:inline-flex;align-items:center;gap:3px;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8b949e);padding:0 3px;border-radius:4px;cursor:pointer;font-size:11px;line-height:16px}
+.wb-copy:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-copy-done{color:var(--wb-ok)}
+.wb-detail-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+/* 合并 flush-right：margin-left:auto 推到底，wrap 后仍贴右，无需占位元素。 */
+.wb-merge-btn{margin-left:auto}
+.wb-merge-btn:disabled{border-color:var(--dsw-alias-border-l1,rgba(0,0,0,.1));color:var(--dsw-alias-label-tertiary,#8b949e);background:transparent}
+.wb-merge-panel{align-self:flex-start;display:flex;flex-direction:column;gap:8px;margin-top:4px;padding:10px 12px;border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));border-radius:8px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.03));min-width:300px;max-width:480px}
+.wb-merge-title{font-size:13px;line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-merge-panel-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+/* ── 确认对话框：列表行 合并/关闭 与详情「更多·关闭」共用的样式化确认框
+   （替代原生 confirm()——不随主题、按钮是浏览器文案）。复用浮层表面 tokens
+   与 glab-btn 变体；OK 自动聚焦（Enter 确认），Esc / 点遮罩取消。 ── */
+.wb-modal-backdrop{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.45)}
+.wb-modal{display:flex;flex-direction:column;gap:8px;width:min(420px,100%);padding:14px 16px;background:var(--dsw-alias-bg-layer-1,rgb(32,32,34));border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.24)}
+.wb-modal-title{font-size:14px;line-height:22px;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0);word-break:break-word}
+.wb-modal-body{display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:20px;color:var(--dsw-alias-label-secondary,#94a3b8);word-break:break-word}
+.wb-modal-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:4px}
+.wb-more-wrap{position:relative;display:inline-flex}
+.wb-popbackdrop{position:fixed;inset:0;z-index:39;background:transparent;border:0;padding:0}
+.wb-more{position:absolute;top:calc(100% + 5px);right:0;z-index:40;display:flex;flex-direction:column;min-width:136px;padding:4px;background:var(--dsw-alias-bg-layer-1,rgb(32,32,34));border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.14)}
+.wb-more-item{display:flex;align-items:center;gap:7px;border:0;background:transparent;color:var(--dsw-alias-label-secondary,#94a3b8);font-size:13px;font-family:inherit;line-height:20px;padding:6px 9px;border-radius:6px;cursor:pointer;text-align:left;white-space:nowrap}
+.wb-more-item:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-more-item:disabled{opacity:.45;cursor:default}
+.wb-more-ic{display:inline-flex;color:inherit}
+.wb-more-item .wb-ok-ic{color:var(--wb-ok)}
+.wb-more-danger{color:var(--dsw-alias-label-tertiary,#8b949e)}
+.wb-more-danger .wb-danger-ic{color:var(--wb-danger)}
+.wb-detail-tabs{margin-top:2px}
+/* ── 评论 tab ── */
+.wb-notes{display:flex;flex-direction:column;gap:12px;min-width:0}
+.wb-notes-list{display:flex;flex-direction:column;gap:10px}
+.wb-note{border:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));border-radius:8px;padding:8px 12px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.03))}
+.wb-note-head{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.wb-note-author{font-size:13px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-note-time{font-size:12px;color:var(--dsw-alias-label-tertiary,#8b949e)}
+.wb-note-body{min-width:0;font-size:13.5px;line-height:1.65;color:var(--dsw-alias-label-secondary,#c3cad5)}
+.wb-note-body :where(p){margin:2px 0}
+.wb-note-plain{white-space:pre-wrap;word-break:break-word}
+.wb-notes-empty{padding:20px 0;text-align:center}
+.wb-note-box{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));border-radius:8px;background:var(--dsw-alias-bg-layer-1,rgba(255,255,255,.03))}
+.wb-note-box .glab-textarea{min-height:64px}
+.wb-note-actions{display:flex;gap:6px}
+/* ── toast ── */
+.wb-toasts{display:flex;flex:1 1 220px;min-width:0;flex-direction:column;gap:6px;margin-left:auto;max-width:100%}
+.wb-toasts:empty{flex-basis:0}
+.wb-toasts :is(.wb-toast,.wb-git-toast){box-shadow:none;width:100%;overflow-wrap:anywhere}
+.wb-toast{pointer-events:auto;display:flex;align-items:flex-start;gap:8px;padding:8px 10px 8px 12px;border-radius:8px;font-size:13px;line-height:20px;color:var(--dsw-alias-label-primary,#e2e8f0);background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.14));box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.wb-toast-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none;background:var(--wb-ok)}
+.wb-toast-err .wb-toast-dot{background:var(--wb-danger)}
+.wb-toast-text{min-width:0;word-break:break-word}
+.wb-toast-x{flex:none;border:0;background:transparent;color:var(--dsw-alias-label-tertiary,#8b949e);font-size:15px;line-height:16px;cursor:pointer;padding:0 2px}
+.wb-toast-x:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.glab-article{max-width:1000px;min-width:0;--dsw-font-markdown-base:15px / 1.7 var(--dsw-font-family);--dsw-font-markdown-base-strong:600 15px / 1.7 var(--dsw-font-family);--dsw-font-markdown-h1:600 calc(17px + var(--dsh-content-font-delta,0px)) / 1.45 var(--dsw-font-family);--dsw-font-markdown-h2:600 calc(15.5px + var(--dsh-content-font-delta,0px)) / 1.5 var(--dsw-font-family);--dsw-font-markdown-h3:600 calc(14.5px + var(--dsh-content-font-delta,0px)) / 1.5 var(--dsw-font-family);--dsw-font-markdown-h4:600 calc(14px + var(--dsh-content-font-delta,0px)) / 1.55 var(--dsw-font-family)}
+.glab-article .glab-detail-desc{font-size:15px;line-height:1.7}
+/* ── DMS 工单详情的 SQL 区：纵向排 SQL 脚本 / 回滚 SQL 两块（复用 sls 的
+   wb-sls-sqlwrap/sqlhead/sql 高亮样式，见 sls.css）── */
+.wb-dms-sqls{display:flex;flex-direction:column;gap:8px;min-width:0}
+/* SQL 脚本是审批时要逐字读的内容，不是日志流水：字号对齐正文 13px，
+   比 sls.css 日志场景的 11px 大一档；只作用于 DMS 详情，不改 SLS 页。 */
+.wb-dms-sqls .wb-sls-sql{font-size:13px;line-height:20px}
+/* ── DMS 无 SQL 工单的内容卡（权限申请 / 导出 / 追踪 / 归档）：申请内容与
+   工单内容共用一套 KV 行样式，外层复用 wb-sls-sqlwrap + wb-sls-sqlhead。── */
+.wb-dms-kv{display:flex;flex-direction:column;gap:3px;padding:2px 8px 8px;font-size:12px;line-height:19px}
+.wb-dms-kv-row{display:flex;gap:8px;min-width:0}
+.wb-dms-kv-k{flex:none;width:64px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-dms-kv-v{flex:1 1 0;min-width:0;word-break:break-word;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-dms-kv-list{display:flex;flex-direction:column;gap:2px;min-width:0}
+.wb-dms-kv-item{display:flex;gap:8px;align-items:baseline;min-width:0}
+/* 资源行（.wb-dms-kv-label/-meta 只在资源清单里用）：定位串是机器标识
+   （host:port [实例] · 库.表.列），用等宽字体 + 正文字号 13px，再以代码蓝
+   （与 SQL 关键字同源 --wb-info）和上方申请类型等普通文案区分；
+   meta（引擎 · 环境）是标签性质，小一号。 */
+.wb-dms-kv-label{min-width:0;word-break:break-all;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:13px;line-height:20px;color:var(--wb-info)}
+.wb-dms-kv-meta{flex:none;font-size:12px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+
+/* Detail tools share a row; narrow panels wrap without hiding actions. */
+.wb-detail-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08))}
+.wb-detail-toolbar>.wb-detail-tabs{flex:1;min-width:0;border-bottom:0;margin-top:0}
+.wb-detail-toolbar>.wb-detail-actions{margin:0;padding:4px 0}
+.wb-detail-context{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.wb-review-target{overflow-wrap:anywhere;min-width:0}
+.wb-review-context{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wb-review-context-task{display:flex;align-items:center;gap:6px;flex-wrap:wrap}

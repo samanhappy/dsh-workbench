@@ -1,0 +1,15 @@
+.wb-notification-toolbar{justify-content:space-between}
+.wb-notification-toolbar .wb-item-actions{margin:0;gap:8px}
+.wb-notification-toolbar select.glab-input{width:auto;font-size:13px;line-height:20px;padding-block:4px}
+.wb-notifications>.glab-body{gap:0;padding:4px 16px 16px}
+.wb-notification-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:.5px solid var(--dsw-alias-border-l2,rgba(128,128,128,.18))}
+.wb-notification-content{flex:1;min-width:0;position:relative;padding-left:14px}
+.wb-notification-unread .wb-notification-content:before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--wb-accent)}
+.wb-notification-title{display:block;border:0;background:transparent;padding:0;text-align:left;font-family:inherit;font-size:13px;line-height:20px;color:var(--dsw-alias-label-primary,#e2e8f0);cursor:pointer;text-decoration:none;white-space:normal;overflow-wrap:anywhere}
+.wb-notification-unread .wb-notification-title{font-weight:500}
+.wb-notification-title:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-notification-title:focus-visible{outline:2px solid var(--wb-accent);outline-offset:3px;border-radius:3px}
+.wb-notification-meta{font-family:inherit;font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);margin-top:4px;overflow-wrap:anywhere}
+.wb-notification-actions{display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end;flex:none}
+.wb-notification-pagination{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 0;font-size:12px;line-height:18px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+@media(max-width:640px){.wb-notification-row{align-items:stretch;flex-direction:column;gap:4px}.wb-notification-actions{justify-content:flex-start;padding-left:6px}}

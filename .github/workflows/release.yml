@@ -1,0 +1,99 @@
+# Release workflow: a `v*` tag publishes @samanhappy/dsh-workbench to npm with
+# npm trusted publishing (GitHub OIDC) and creates the matching GitHub release.
+# No npm token is stored in the repository.
+#
+# One-time maintainer setup, outside this repo:
+#   * npm (package settings -> Trusted publishing): add this repository with
+#     workflow file `.github/workflows/release.yml` and environment
+#     `npm-publish`. Trusted publishing requires a recent npm CLI (>= 11.5.1);
+#     Node 24.x ships one.
+#   * GitHub (repository settings -> Environments): create `npm-publish`
+#     (protection rules optional).
+#
+# The tag's commit is verified before it is published: the committed bundles
+# must rebuild byte-for-byte from source and the full test suite must pass.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write # create the GitHub release
+  id-token: write # OIDC: npm trusted publishing + provenance
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: npm-publish
+      url: https://www.npmjs.com/package/@samanhappy/dsh-workbench
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          # Tag and full history, for `gh release create --verify-tag` and
+          # generated release notes.
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+
+      # Refuse to publish when the tag disagrees with the manifest — npm has no
+      # undo for a wrongly versioned publish.
+      - name: Tag must match package.json version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild committed bundles
+        run: npm run build
+
+      - name: Committed bundles must not drift
+        run: git diff --exit-code -- index.js lib/client.js
+
+      - name: Run tests
+        run: npm test
+
+      # The very first release may be published manually (npm requires the
+      # package to exist before a trusted publisher can be configured for it).
+      # Skip the publish step when this exact version is already on the
+      # registry so that pushing the tag still creates the GitHub release.
+      - name: Is this version already on npm?
+        id: registry
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if npm view "@samanhappy/dsh-workbench@${version}" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # OIDC is exchanged for a short-lived publish token; `--provenance`
+      # attaches a signed provenance statement to the published tarball.
+      - name: Publish to npm
+        if: steps.registry.outputs.published != 'true'
+        run: npm publish --provenance --access public
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag

@@ -1,0 +1,97 @@
+.wb-config-head{display:flex;align-items:center;gap:8px;min-width:0}.wb-config-title{font-size:13px;line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0);white-space:nowrap}.wb-config-help{font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98);word-break:break-word}.wb-config-tokens{display:flex;flex-wrap:wrap;gap:4px}.wb-config-token{display:inline-flex;border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));color:var(--dsw-alias-label-secondary,#94a3b8);border-radius:5px;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:16px;padding:1px 6px;cursor:pointer}.wb-config-token:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}.wb-config-pre{max-height:150px;overflow:auto;margin:0;padding:7px 9px;border:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));border-radius:6px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:11px;line-height:19px;color:var(--dsw-alias-label-secondary,#94a3b8);white-space:pre-wrap;word-break:break-word}.wb-config-item{display:flex;flex-direction:column;gap:5px}.wb-config-toggle{display:flex;align-items:center;gap:6px;flex:1;min-width:0;padding:2px 4px;margin:-2px -4px;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:6px}.wb-config-toggle:hover .wb-config-chev{color:var(--dsw-alias-label-primary,#e2e8f0)}.wb-config-body{display:flex;flex-direction:column;gap:5px}.wb-config-group{display:flex;flex-direction:column;gap:10px}.wb-config-group-title{font-size:13px;line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0);white-space:nowrap}.wb-config-item-toggle,.wb-config-item-boxed{border:0.5px solid var(--dsw-alias-border-l1,rgba(255,255,255,.08));border-radius:7px;padding:7px 9px;gap:4px}.wb-config-item-toggle .wb-config-head,.wb-config-item-boxed .wb-config-head{min-height:24px}.wb-switch{position:relative;flex:none;width:34px;height:18px;padding:0;border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12));border-radius:9px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));cursor:pointer;transition:background .15s ease,border-color .15s ease}.wb-switch:hover{border-color:var(--dsw-alias-border-l3,rgba(255,255,255,.16))}.wb-switch-on{background:var(--wb-accent-bg);border-color:rgba(252,109,38,.45)}.wb-switch-knob{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--dsw-alias-label-tertiary,#8a8f98);transition:left .15s ease,background .15s ease}.wb-switch-on .wb-switch-knob{left:18px;background:var(--wb-accent)}.wb-config-select{width:100%;max-width:100%;box-sizing:border-box;font-size:12px;line-height:18px;padding:4px 6px;border-radius:6px;background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));color:var(--dsw-alias-label-primary,#e2e8f0);border:0.5px solid var(--dsw-alias-border-l2,rgba(255,255,255,.12))}.wb-config-select:disabled{opacity:.6;cursor:not-allowed}.wb-config-select option,.wb-config-select optgroup{background:var(--dsw-alias-bg-layer-2,rgb(44,44,46));color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-auto-review .wb-config-body{gap:10px}.wb-auto-review p{margin:0}.wb-auto-review .wb-config-select{max-width:420px}
+/* 自动评审仓库页：页首概览（标题居左，统计靠右上）+ 两栏卡片
+   （评审配置 | 最近评审）。层级沿用面板排版契约（15px 区块题、20px 统计值、
+   12/11px 辅助行），状态色只用 --wb-* 语义 token；容器 <700px 时并成单列
+   （与页内其他断点一致）。 */
+.wb-review-page{display:flex;flex-direction:column;gap:12px;min-width:0}
+/* 左侧标题组相对右侧统计整块（数值行 + 标签行）垂直居中；padding-right 让
+   统计右缘落在卡片内容右缘上，与刷新图标/状态胶囊/启用开关共享同一条右缘线
+   （卡外缘内缩 1px 边框 + 12px 内边距）。 */
+.wb-review-overview{display:flex;align-items:center;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;padding-right:13px;min-width:0}
+.wb-review-headline{display:flex;flex-direction:column;min-width:0}
+.wb-review-title-row{display:flex;align-items:center;gap:8px;min-width:0}
+.wb-review-title{font-size:15px;line-height:22px;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-review-stats{display:flex;flex-wrap:wrap;gap:4px 32px;flex:none}
+.wb-review-stat{display:flex;flex-direction:column}
+.wb-review-stat-value{font-size:20px;line-height:28px;font-weight:600;color:var(--dsw-alias-label-primary,#e2e8f0)}
+.wb-review-stat-label{font-size:12px;line-height:18px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-review-cols{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:12px;align-items:start}
+.wb-review-card{display:flex;flex-direction:column;gap:10px;min-width:0;padding:12px;border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.14));border-radius:9px;background:var(--dsw-alias-bg-layer-1,#232324)}
+.wb-review-card-head{display:flex;align-items:center;gap:8px;min-height:28px}
+.wb-review-card-title{font-size:13px;line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary,#e2e8f0);white-space:nowrap}
+.wb-review-enable{display:flex;align-items:center;gap:8px;min-height:28px}
+.wb-review-rows{display:flex;flex-direction:column}
+.wb-review-row{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-top:0.5px solid var(--dsw-alias-border-l1,rgba(128,128,128,.1))}
+.wb-review-row:first-child{border-top:0;padding-top:2px}
+.wb-review-row-top{display:flex;align-items:center;gap:8px;min-width:0}
+.wb-review-row-num{flex:none;font-family:var(--ds-font-family-code,ui-monospace,monospace);font-size:12px;line-height:20px;color:var(--dsw-alias-label-secondary,#94a3b8)}
+.wb-review-row-title{flex:0 1 auto;min-width:0;font-size:13px;line-height:20px;color:var(--dsw-alias-label-primary,#e2e8f0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 有会话的行整行可点（跳转 DSH 会话）；hover 底色由全局 [role='button'] 规则提供。 */
+.wb-review-row-open{cursor:pointer;border-radius:6px}
+.wb-review-row-open:focus-visible{outline:2px solid var(--wb-accent);outline-offset:2px}
+.wb-review-retry{min-height:24px;padding:1px 8px;font-size:12px;line-height:18px}
+.wb-review-row-meta{font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8f98)}
+.wb-review-row-err{font-size:11px;line-height:16px;color:var(--wb-danger);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wb-review-more{min-width:0}
+.wb-review-more>summary{align-self:flex-start;padding:2px 6px;font-size:13px;line-height:20px;color:var(--wb-accent)}
+.wb-review-more .wb-review-rows{padding-top:4px}
+@container (max-width:700px){.wb-review-cols{grid-template-columns:minmax(0,1fr)}.wb-review-stats{gap:4px 24px}}
+
+
+/* Settings uses the workbench's theme tokens; only the page layout is specific. */
+.wb-config{display:grid;grid-template-columns:144px minmax(0,720px);align-items:start;align-content:start;justify-content:start;gap:28px;flex:1;min-height:0;overflow:auto;margin:0 24px 16px;padding:16px 0}
+.wb-config-sidebar{position:sticky;top:0;min-width:0}
+.wb-config-sidebar h1{margin:0 0 20px;font-size:16px;line-height:26px;font-weight:600}
+.wb-config-nav{display:flex;flex-direction:column;gap:4px}
+.wb-config-nav-item{border:0;background:transparent;color:var(--dsw-alias-label-secondary,#94a3b8);font:inherit;font-size:13px;text-align:left;padding:8px 10px;border-radius:6px;cursor:pointer}
+.wb-config-nav-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wb-config-nav-item[aria-current]{background:var(--wb-accent-bg);color:var(--wb-accent);font-weight:500}
+.wb-config-content{min-width:0}
+.wb-config-content-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:32px}
+.wb-config-content-head h2{margin:0;font-size:15px;line-height:24px;font-weight:600}
+.wb-config-content>p{margin:4px 0 18px}
+.wb-config-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;min-height:0}
+.wb-config-section{min-width:0}
+.wb-config-section[hidden]{display:none}
+.wb-config .wb-config-group{display:flex;flex-direction:column;gap:0}
+.wb-config .wb-config-item{border:0;border-radius:0;padding:9px 0;gap:6px;border-bottom:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.12))}
+.wb-config .wb-config-title{font-size:13px;line-height:22px;white-space:normal}
+.wb-config-label{min-width:0;flex:1}
+.wb-config-setting{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:24px}
+.wb-config-controls{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:0 1 360px;min-width:0;flex-wrap:wrap}
+.wb-config-setting-toggle .wb-config-controls{flex:none}
+.wb-config-controls .wb-config-select{flex:1;min-width:0;width:240px;max-width:100%}
+.wb-config-controls>.wb-config-help{flex-basis:100%}
+.wb-config-feature{display:grid;grid-template-columns:minmax(0,1fr) 124px 116px;align-items:center;gap:16px}
+.wb-config-feature .wb-config-controls{flex-wrap:nowrap}
+.wb-config-shortcut{display:flex;justify-content:center}
+.wb-config-columns{padding:8px 0;color:var(--dsw-alias-label-tertiary,#8a8f98);font-size:11px;border-bottom:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.12))}
+.wb-config-columns>:nth-child(2){text-align:center}
+.wb-config-columns>:last-child{text-align:right}
+.wb-config-row .wb-config-toggle{margin:0;padding:0;min-height:28px}
+.wb-config-row .wb-config-body{padding-top:12px;gap:10px}
+.wb-config-row>.wb-config-head{flex-wrap:nowrap}
+.wb-config-row>.wb-config-head>.glab-btn{flex:none}
+.wb-config-row-state{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:50%}
+.wb-config-row>summary{min-height:28px;cursor:pointer}
+.wb-config .wb-config-chev{order:2}
+.wb-config .wb-config-pre{max-height:240px}
+.wb-config input[type='checkbox']{accent-color:var(--wb-accent)}
+@container (max-width:850px){
+ .wb-workbench .wb-config{grid-template-columns:128px minmax(0,1fr);gap:24px}
+ .wb-config-feature{grid-template-columns:minmax(0,1fr) 100px 110px;gap:8px}
+ .wb-config-setting:not(.wb-config-feature):not(.wb-config-setting-toggle){flex-wrap:wrap;gap:8px}
+ .wb-config-setting:not(.wb-config-feature):not(.wb-config-setting-toggle) .wb-config-controls{flex-basis:100%;justify-content:flex-start}
+}
+@container (max-width:600px){
+ .wb-workbench .wb-config{grid-template-columns:minmax(0,1fr);gap:20px;margin:0 16px 16px;padding:12px 0}
+ .wb-config-sidebar{position:static}
+ .wb-config-sidebar h1{margin-bottom:12px}
+ .wb-config-nav{flex-direction:row;flex-wrap:wrap;gap:4px}
+ .wb-config-nav-item{padding:7px 10px}
+ .wb-config-feature{grid-template-columns:minmax(0,1fr) 90px 100px}
+ .wb-config-feature .wb-config-controls{gap:6px;flex-wrap:wrap}
+ .wb-config .wb-config-feature .glab-btn{font-size:11px;padding:2px 4px;min-height:26px}
+ .wb-config-row-state{max-width:42%}
+}
