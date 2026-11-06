@@ -1,0 +1,19 @@
+src/client/components/dms.tsx
+  s_a7db3ecd736086::t_2a3099705d03ec 1-667
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6d6e271e1cd82821853757337c067e2ee7224af2",
+  "prompts": {},
+  "sessions": {
+    "s_a7db3ecd736086": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19c7a-c2df-7421-b9b2-af63b338a152",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "samanhappy <samanhappy@gmail.com>"
+    }
+  }
+}
