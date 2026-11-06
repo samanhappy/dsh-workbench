@@ -57,7 +57,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@deepseek-ai/schemastery": "3.18.2",
+    "@deepseek-ai/schemastery": "3.18.5",
     "@types/node": "^22.10.0",
     "@types/react": "~18.3.0",
     "diff": "^9.0.0",
