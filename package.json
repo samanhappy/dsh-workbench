@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@deepseek-ai/schemastery": "3.18.2",
-    "@types/node": "^22.10.0",
+    "@types/node": "^26.6.6",
     "@types/react": "~18.3.0",
     "diff": "^9.0.0",
     "esbuild": "^0.28.0",
